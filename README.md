@@ -39,7 +39,7 @@ Currently its just a PoC and no input is possible.
 
 The current number factorized is 24.
 
-You can read from the map that the number is divideable by 1,24,12,8,6,4,3,2. (x read from top to down)
+You can read from the map that the number is divideable by 24,12,8,6,4,3,2,1. (x read from top to down)
 
 
 Future use would be to generate maps for 2^n (where n is the bit-width of the maximum possible number).

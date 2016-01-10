@@ -1,10 +1,10 @@
 begin
 	SIZE=16
-	A = reshape([0:SIZE*SIZE-1] % SIZE + 1,SIZE,SIZE)
+	A = reshape(collect(0:SIZE*SIZE-1) % SIZE + 1,SIZE,SIZE)
 	function F(x,y)
 			A[y,x]
 	end
-	B = [F(x,y) for x=[1:SIZE],y=[1:SIZE]]
+	B = [F(x,y) for x=collect(1:SIZE),y=collect(1:SIZE)]
 	
 	C = Array(Array,6)
 	C[1] = ((A.*B)&(2^0)).==2^0
