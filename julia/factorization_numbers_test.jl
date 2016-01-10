@@ -8,7 +8,6 @@ begin
 	# By counting the digits you simply find out by what number it is divideable.
 	# In this case 24 is divideable through 1,2,3,4,6,8,12 and 24.
 	# ToDo: Update main.cpp (use big number library there)
-	#       Julia only supports 128bit integers as maximum, what a shame.
 	#       I do not prefer to go back to lists or anything like that, maybe need to wait for updates.
 
 	function normalize_num(v,KL)
@@ -19,13 +18,13 @@ begin
 		y = 0
 		
 		while true
-			if v & UInt128(2)^i != 0
-				R |= UInt128(2)^x
+			if v & BigInt(2)^i != 0
+				R |= BigInt(2)^x
 			end
 			x += 1
 			i += 1
 			n += 1
-			if (KL & UInt128(2)^n) != 0
+			if (KL & BigInt(2)^n) != 0
 				if x == 1
 					R |= 1
 					break
@@ -38,7 +37,7 @@ begin
 		R
 	end
 	function calc_fact_num(pos,fnum)
-		R = UInt128(0)
+		R = BigInt(0)
 		M = C[pos]
 		N = K[fnum]
 		i = 0
@@ -46,7 +45,7 @@ begin
 			for y in 1:SIZE
 				if N[x,y]
 					if M[x,y]
-						R |= UInt128(2)^i
+						R |= BigInt(2)^i
 					end
 					i += 1
 				end
@@ -55,7 +54,7 @@ begin
 		R
 	end
 	function calc_kl(KL_X)
-		R = UInt128(0)
+		R = BigInt(0)
 		i = 0
 		done = false
 		for y in 1:SIZE
@@ -64,7 +63,7 @@ begin
 					if x == 1
 						done = true
 					end
-					R |= UInt128(2)^i
+					R |= BigInt(2)^i
 					if done
 						break
 					end
@@ -83,12 +82,7 @@ begin
 		v $ 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 	end
 	
-	#v = normalize_num(0b1000000000001000000,0b11010101010010010000100000000)
-	#println()
-	#println(reverse(bin(v)))
-	
-	if true
-	
+	startT = Dates.unix2datetime(time())	
 	SIZE=2^5
 	A = reshape(collect(0:SIZE*SIZE-1) % SIZE + 1,SIZE,SIZE)
 	function F(x,y)
@@ -154,6 +148,11 @@ begin
 	KL_4 = calc_kl(K[4])
 	KL_5 = calc_kl(K[5])
 
+	endT = Dates.unix2datetime(time())
+	
+	# Numbers would need to be generated only ONCE(then stored somewhere) and loaded when needed, wich should not take that long
+	println("Time used for generating basic numbers: ",endT-startT)
+	
 	# binary 111 -> 7
 	v = J1_3 & J2_3 & J3_3
 	v = normalize_num(v,KL_3)
@@ -175,10 +174,13 @@ begin
 	println("KL_5:",KL_5)
 
 	println()
+
+	startT = Dates.unix2datetime(time())
 	# binary 11000 -> 24
 	v = not(J1_5) & not(J2_5) & not(J3_5) & J4_5 & J5_5
 	v = normalize_num(v,KL_5)
 	println(reverse(bin(v)))
+	endT = Dates.unix2datetime(time())
+	println("Time actually needed to calculate from precalculated numbers: ",endT-startT)
 
-	end
 end
